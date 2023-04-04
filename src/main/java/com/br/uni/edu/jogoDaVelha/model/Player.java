@@ -2,7 +2,7 @@ package com.br.uni.edu.jogoDaVelha.model;
 
 import jakarta.persistence.*;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_players")
@@ -13,8 +13,26 @@ public class Player{
     private String nickname;
     private String email;
     private String password;
+    private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
+    private LocalDateTime deletedAt;
+    private Boolean active;
+    private Status status;
+
 
     public Player() {
+    }
+
+    public Player(Long id, String nickname, String email, String password, LocalDateTime createdAt, LocalDateTime updateAt, LocalDateTime deletedAt, Boolean active, Status status) {
+        this.id = id;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.updateAt = updateAt;
+        this.deletedAt = deletedAt;
+        this.active = active;
+        this.status = status;
     }
 
     public Long getId() {
@@ -47,5 +65,45 @@ public class Player{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

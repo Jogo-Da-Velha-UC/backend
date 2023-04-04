@@ -1,9 +1,9 @@
 package com.br.uni.edu.jogoDaVelha.service;
 
 import com.br.uni.edu.jogoDaVelha.model.Player;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface PlayerService {
 
