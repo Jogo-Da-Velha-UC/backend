@@ -1,6 +1,11 @@
-CREATE TABLE tb_players(
-	id bigint NOT NULL,
-	email varchar(255) NULL,
-	nickname varchar(255) NOT NULL,
-	password varchar(255) NOT NULL
-	);
+CREATE TABLE tb_players (
+  player_id bigint AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  nickname VARCHAR(100) NOT NULL,
+  email VARCHAR(150) NOT NULL,
+  password VARCHAR(50) NOT NULL,
+  created_at date NOT NULL,
+  updated_at date NOT NULL,
+  deleted_at date NULL,
+  active int NOT NULL,
+  status ENUM('ACTIVE', 'INACTIVE', 'BLOCK') NOT NULL
+);

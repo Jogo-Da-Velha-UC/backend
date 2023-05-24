@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,7 +29,7 @@ public class PlayerServiceImpl implements PlayerService {
             }
 
             final Player byId = findById(id);
-            byId.setDeletedAt(LocalDateTime.now());
+            byId.setDeletedAt(new Date());
             byId.setActive(Boolean.FALSE);
             playerRepository.save(byId);
 
@@ -44,8 +45,8 @@ public class PlayerServiceImpl implements PlayerService {
                 throw new Exception(String.format("Player cannot null"));
             }
             player.setActive(Boolean.TRUE);
-            player.setCreatedAt(LocalDateTime.now());
-            player.setUpdateAt(LocalDateTime.now());
+            player.setCreatedAt(new Date());
+            player.setUpdatedAt(new Date());
             return playerRepository.save(player);
         } catch (Exception e) {
             throw new Exception(e.getMessage());

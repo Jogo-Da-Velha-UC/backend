@@ -1,46 +1,28 @@
 package com.br.uni.edu.jogoDaVelha.model;
 
+import com.br.uni.edu.jogoDaVelha.enums.StatusPlayerEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "tb_players")
 public class Player{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long playerId;
     private String nickname;
     private String email;
     private String password;
-    private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
-    private LocalDateTime deletedAt;
+    private Date createdAt;
+    private Date updatedAt;
+    private Date deletedAt;
     private Boolean active;
-    private Status status;
-
+    @Enumerated
+    private StatusPlayerEnum status;
 
     public Player() {
-    }
-
-    public Player(Long id, String nickname, String email, String password, LocalDateTime createdAt, LocalDateTime updateAt, LocalDateTime deletedAt, Boolean active, Status status) {
-        this.id = id;
-        this.nickname = nickname;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.updateAt = updateAt;
-        this.deletedAt = deletedAt;
-        this.active = active;
-        this.status = status;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNickname() {
@@ -67,27 +49,35 @@ public class Player{
         this.password = password;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Long getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(Long playerId) {
+        this.playerId = playerId;
+    }
+
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public LocalDateTime getDeletedAt() {
+    public Date getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
+    public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
     }
 
@@ -99,11 +89,11 @@ public class Player{
         this.active = active;
     }
 
-    public Status getStatus() {
+    public StatusPlayerEnum getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(StatusPlayerEnum status) {
         this.status = status;
     }
 }
