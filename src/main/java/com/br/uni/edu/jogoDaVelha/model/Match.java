@@ -3,11 +3,10 @@ package com.br.uni.edu.jogoDaVelha.model;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+@Entity
+@Table(name = "tb_matches")
 public class Match implements Serializable {
 
     @Id
@@ -23,7 +22,9 @@ public class Match implements Serializable {
     private StatusMatch statusMatch;
     @OneToOne
     private Player startedWith;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "match")
     private List<Move> moveList = new ArrayList<>();
     private Date createdAt;
     private Date updatedAt;

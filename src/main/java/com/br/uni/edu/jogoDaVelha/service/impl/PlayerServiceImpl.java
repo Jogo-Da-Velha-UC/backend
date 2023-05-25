@@ -1,7 +1,9 @@
 package com.br.uni.edu.jogoDaVelha.service.impl;
 
+import com.br.uni.edu.jogoDaVelha.builders.PlayerBuilder;
 import com.br.uni.edu.jogoDaVelha.model.Player;
 import com.br.uni.edu.jogoDaVelha.repositories.PlayerRepository;
+import com.br.uni.edu.jogoDaVelha.requests.CreatePlayerRequest;
 import com.br.uni.edu.jogoDaVelha.service.PlayerService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -39,14 +42,21 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player savePlayer(Player player) throws Exception {
+    public Player savePlayer(CreatePlayerRequest playerRequest) throws Exception {
         try {
-            if (ObjectUtils.isEmpty(player)) {
+            if (ObjectUtils.isEmpty(playerRequest)) {
                 throw new Exception(String.format("Player cannot null"));
             }
-            player.setActive(Boolean.TRUE);
-            player.setCreatedAt(new Date());
-            player.setUpdatedAt(new Date());
+
+            Player player = PlayerBuilder.builder()
+                    .nickName(playerRequest.getNickname())
+                    .email(playerRequest.getEmail())
+                    .password(new String(Base64.getEncoder().encode(playerRequest.getPassword().getBytes())))
+                    .active(Boolean.TRUE)
+                    .updatedAt(new Date())
+                    .createdAt(new Date())
+                    .build();
+
             return playerRepository.save(player);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -76,9 +86,9 @@ public class PlayerServiceImpl implements PlayerService {
             Player playerUpdt = playerRepository.findById(id).orElseThrow();
 
             if (playerRepository.findByEmail(player.getEmail()).isPresent() &&
-                    playerUpdt.getNickname().equals(player.getNickname())){
+                    playerUpdt.getNickName().equals(player.getNickName())){
                 playerUpdt.setEmail(player.getEmail());
-                playerUpdt.setNickname(player.getNickname());
+                playerUpdt.setNickName(player.getNickName());
                 return playerRepository.save(playerUpdt);
             }
 
@@ -98,5 +108,14 @@ public class PlayerServiceImpl implements PlayerService {
             throw new Exception(String.format("Id %s not found", id));
         }
     }
+    @Override
+    public Player findByUsername(String nickName) throws Exception {
+        try {
+            return playerRepository.findByNickName(nickName).orElseThrow();
+        } catch (Exception e) {
+            throw new Exception(String.format("UserName %s not found", nickName));
+        }
+    }
+
 
 }

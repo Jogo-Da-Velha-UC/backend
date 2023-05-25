@@ -1,4 +1,4 @@
-package com.br.uni.edu.jogoDaVelha.response;
+package com.br.uni.edu.jogoDaVelha.dtos;
 
 import org.springframework.hateoas.RepresentationModel;
 

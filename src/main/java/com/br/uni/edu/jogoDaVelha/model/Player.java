@@ -12,7 +12,7 @@ public class Player{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playerId;
-    private String nickname;
+    private String nickName;
     private String email;
     private String password;
     private Date createdAt;
@@ -25,12 +25,12 @@ public class Player{
     public Player() {
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getEmail() {

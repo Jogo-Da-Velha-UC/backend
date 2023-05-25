@@ -1,18 +1,14 @@
 package com.br.uni.edu.jogoDaVelha.resource;
 
 import com.br.uni.edu.jogoDaVelha.model.Player;
-import com.br.uni.edu.jogoDaVelha.response.Response;
+import com.br.uni.edu.jogoDaVelha.dtos.Response;
+import com.br.uni.edu.jogoDaVelha.requests.CreatePlayerRequest;
 import com.br.uni.edu.jogoDaVelha.service.PlayerService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/player")
@@ -25,11 +21,10 @@ public class PlayerResource {
     }
 
     @PostMapping
-    public ResponseEntity<Response<Player>> savePlayer(@RequestBody Player player){
+    public ResponseEntity<Response<Player>> savePlayer(@RequestBody CreatePlayerRequest playerRequest){
         Response<Player> response = new Response<>();
         try{
-            Player playersaved = playerService.savePlayer(player);
-            response.setData(playersaved);
+            response.setData(playerService.savePlayer(playerRequest));
             response.setStatusCode(HttpStatus.CREATED.value());
         }catch (Exception e){
             response.setStatusCode(HttpStatus.BAD_REQUEST.value());
