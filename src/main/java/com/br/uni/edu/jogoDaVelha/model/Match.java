@@ -13,19 +13,14 @@ public class Match implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMatch;
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "player_one_id")
     private Player playerOne;
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "player_two_id")
     private Player playerTwo;
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "game_struct")
     private GameStruct gameStruct;
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "status_match_id")
     private StatusMatch statusMatch;
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "started_with_player_id")
     private Player startedWith;
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,

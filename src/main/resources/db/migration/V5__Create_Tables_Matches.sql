@@ -1,18 +1,12 @@
-CREATE TABLE tb_matches (
-  id_match bigint AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  player_one_id bigint NULL,
-  player_two_id bigint NULL,
-  game_struct bigint NOT NULL,
-  status_match_id bigint NOT NULL,
-  started_with_player_id bigint NULL,
-  created_at date NOT NULL,
-  updated_at date NOT NULL,
-  deleted_at date NULL
-);
-
-ALTER TABLE tb_matches ADD CONSTRAINT fk_player_one_id FOREIGN KEY (player_one_id) REFERENCES tb_players (player_id);
-ALTER TABLE tb_matches ADD CONSTRAINT fk_player_two_id FOREIGN KEY (player_two_id) REFERENCES tb_players (player_id);
-ALTER TABLE tb_matches  ADD CONSTRAINT fk_game_struct FOREIGN KEY (game_struct) REFERENCES tb_game_structs (game_struct_id);
-ALTER TABLE tb_matches  ADD CONSTRAINT fk_status_match_id FOREIGN KEY (status_match_id) REFERENCES tb_status_matches (status_match_id);
-ALTER TABLE tb_matches ADD CONSTRAINT fk_started_with_player_id FOREIGN KEY (started_with_player_id) REFERENCES tb_players (player_id);
-ALTER TABLE tb_moves ADD CONSTRAINT fk_match_id FOREIGN KEY (match_id) REFERENCES tb_matches (id_match);
+create table tb_matches (
+ id_match bigint AUTO_INCREMENT NOT NULL,
+ created_at timestamp(6),
+ deleted_at timestamp(6),
+ updated_at timestamp(6),
+ game_struct_game_struct_id bigint,
+ player_one_player_id bigint,
+ player_two_player_id bigint,
+ started_with_player_id bigint,
+ status_match_status_match_id bigint,
+ primary key (id_match)
+ );

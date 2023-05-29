@@ -42,11 +42,12 @@ public class MatchServiceImpl implements MatchService {
                 throw new Exception("YOU NEED ONE PLAYER TO CREATE THE MATCH!");
             }
 
-            GameStruct gameStruct = createGameStruct();
+            if (findMatch() == null) {
 
-            StatusMatch statusMatch = createStatusMatch();
+                GameStruct gameStruct = createGameStruct();
 
-            if(findMatch() == null){
+                StatusMatch statusMatch = createStatusMatch();
+
                 match = MatchBuilder.builder()
                         .playerOne(player)
                         .gameStruct(gameStruct)
@@ -54,9 +55,9 @@ public class MatchServiceImpl implements MatchService {
                         .createdAt()
                         .updateAt()
                         .build();
-            }else{
+            } else {
                 match = findMatch();
-                if(match.getPlayerOne() != null) {
+                if (match.getPlayerOne() != null) {
                     populateMatchWithOtherPlayer(match, player);
                 }
             }
@@ -89,9 +90,11 @@ public class MatchServiceImpl implements MatchService {
 
         match.setStatusMatch(statusMatch);
     }
+
     private void populateMatchWithOtherPlayer(Match match, Player player) {
         match.setPlayerTwo(player);
         match.setUpdatedAt(new Date());
+        match.setStatusMatch(updateStatusMatch(match.getStatusMatch()));
     }
 
     private GameStruct createGameStruct() {
@@ -115,6 +118,13 @@ public class MatchServiceImpl implements MatchService {
 
         statusMatchRepository.save(statusMatch);
         return statusMatch;
+    }
+
+    private StatusMatch updateStatusMatch(StatusMatch statusOld) {
+        StatusMatch statusNew = statusOld;
+        statusNew.setStatusMatchEnum(StatusMatchEnum.ACTIVE);
+        statusMatchRepository.save(statusNew);
+        return statusNew;
     }
 
     @Override

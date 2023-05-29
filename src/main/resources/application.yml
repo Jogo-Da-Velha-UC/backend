@@ -12,3 +12,25 @@ spring:
     url: jdbc:mysql://localhost:3306/db_tic_tac_toe
     user: root
     password: Mat123456
+
+#spring:
+#  datasource:
+#    password:
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#  jpa:
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format-sql: true
+#        ddl-auto: create-update
+#    database-platform: org.hibernate.dialect.H2Dialect
+#  h2:
+#    console:
+#      enabled: true
+#      settings:
+#        web-allow-others: true
+#    allowed:
+#      resources: /h2-console/**
+#  flyway:
+#    baselineOnMigrate: true
