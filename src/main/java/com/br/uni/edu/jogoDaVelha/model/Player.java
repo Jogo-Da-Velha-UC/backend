@@ -19,7 +19,7 @@ public class Player{
     private Date updatedAt;
     private Date deletedAt;
     private Boolean active;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private StatusPlayerEnum status;
 
     public Player() {

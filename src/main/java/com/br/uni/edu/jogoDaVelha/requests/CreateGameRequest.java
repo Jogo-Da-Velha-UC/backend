@@ -4,23 +4,15 @@ import java.io.Serializable;
 
 public class CreateGameRequest implements Serializable {
 
-    private String playerOne;
+    private String player;
 
     private String playerTwo;
 
-    public String getPlayerOne() {
-        return playerOne;
+    public String getPlayer() {
+        return player;
     }
 
-    public void setPlayerOne(String playerOne) {
-        this.playerOne = playerOne;
-    }
-
-    public String getPlayerTwo() {
-        return playerTwo;
-    }
-
-    public void setPlayerTwo(String playerTwo) {
-        this.playerTwo = playerTwo;
+    public void setPlayer(String player) {
+        this.player = player;
     }
 }

@@ -1,15 +1,14 @@
 package com.br.uni.edu.jogoDaVelha.service.impl;
 
 import com.br.uni.edu.jogoDaVelha.builders.MoveBuilder;
-import com.br.uni.edu.jogoDaVelha.model.GameStruct;
-import com.br.uni.edu.jogoDaVelha.model.Match;
-import com.br.uni.edu.jogoDaVelha.model.Move;
-import com.br.uni.edu.jogoDaVelha.model.Player;
+import com.br.uni.edu.jogoDaVelha.enums.StatusMatchEnum;
+import com.br.uni.edu.jogoDaVelha.model.*;
 import com.br.uni.edu.jogoDaVelha.repositories.GameStructRepository;
 import com.br.uni.edu.jogoDaVelha.repositories.MatchRepository;
 import com.br.uni.edu.jogoDaVelha.repositories.MoveRepository;
 import com.br.uni.edu.jogoDaVelha.requests.MoveRequest;
 import com.br.uni.edu.jogoDaVelha.service.GameStructService;
+import com.br.uni.edu.jogoDaVelha.service.MatchService;
 import com.br.uni.edu.jogoDaVelha.service.MoveService;
 import com.br.uni.edu.jogoDaVelha.service.PlayerService;
 import org.springframework.stereotype.Service;
@@ -23,13 +22,15 @@ public class MoveServiceImpl implements MoveService {
     private final MoveRepository moveRepository;
     private final GameStructRepository gameStructRepository;
     private final MatchRepository matchRepository;
+    private final MatchService matchService;
     private final PlayerService playerService;
     private final GameStructService gameStructService;
 
-    public MoveServiceImpl(MoveRepository moveRepository, GameStructRepository gameStructRepository, MatchRepository matchRepository, PlayerService playerService, GameStructService gameStructService) {
+    public MoveServiceImpl(MoveRepository moveRepository, GameStructRepository gameStructRepository, MatchRepository matchRepository, MatchService matchService, PlayerService playerService, GameStructService gameStructService) {
         this.moveRepository = moveRepository;
         this.gameStructRepository = gameStructRepository;
         this.matchRepository = matchRepository;
+        this.matchService = matchService;
         this.playerService = playerService;
         this.gameStructService = gameStructService;
     }
@@ -37,74 +38,59 @@ public class MoveServiceImpl implements MoveService {
     @Override
     public Match makeMove(MoveRequest moveRequest) throws Exception {
 
-        Match match = matchRepository.findById(moveRequest.getMatchId()).orElseThrow();
+        try {
 
-        GameStruct gameStruct = match.getGameStruct();
+            Match match = matchRepository.findById(moveRequest.getMatchId()).orElseThrow(()
+                    -> new Exception("GAME NOT FOUND!!!"));
 
-        Player player = playerService.findByUsername(moveRequest.getPlayerOne());
-
-        String symbol = getPlayerSymbol(player, match);
-
-        Move move = createMove(match, player, moveRequest.getRol(), moveRequest.getCol(), symbol);
-
-        String key = moveRequest.getRol().concat(moveRequest.getCol());
-
-        // Verifica se a jogada é válida
-        if (!gameStructService.isPositionEmpty(gameStruct, moveRequest.getRol(), moveRequest.getCol())) {
-            throw new Exception("JOGADA INVALIDA.");
-        }
-
-        String field = gameStruct.getFields().get(key);
-        field = symbol;
-        gameStructRepository.save(gameStruct);
-
-        if (player != move.getCurrentPlayer()) {
-            throw new Exception("NÃO É A VEZ DESSE JOGADOR.");
-        }
-
-        // Adiciona a jogada à lista de movimentos
-        match.getMoveList().add(move);
-
-        // Verifica se houve um vencedor
-        if (checkWin(symbol, match)) {
-            return match;
-        }
-
-        // Verifica se houve empate
-        if (checkDrawn(match)) {
-            return match;
-        }
-
-        return null;
-    }
-
-    private boolean checkWin(String symbol, Match match) {
-        Map<String, String> fields = match.getGameStruct().getFields();
-
-        if (fields.get("00") == symbol && fields.get("01") == symbol && fields.get("02") == symbol) {
-            return true;
-        }
-        if (fields.get("00") == symbol && fields.get("10") == symbol && fields.get("20") == symbol) {
-            return true;
-        }
-        if (fields.get("00") == symbol && fields.get("11") == symbol && fields.get("22") == symbol) {
-            return true;
-        }
-        if (fields.get("02") == symbol && fields.get("11") == symbol && fields.get("20") == symbol) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private Boolean checkDrawn(Match match) {
-        Map<String, String> fields = match.getGameStruct().getFields();
-        for (String key : fields.keySet()) {
-            if (key.isBlank()) {
-                return false;
+            if(match.getPlayerOne() == null || match.getPlayerTwo() == null){
+                throw new Exception("INVALID MATCH.");
             }
+
+            GameStruct gameStruct = match.getGameStruct();
+
+            Player player = playerService.findByUsername(moveRequest.getPlayerOne());
+
+            String symbol = getPlayerSymbol(player, match);
+
+            Move move = createMove(match, player, moveRequest.getRol(), moveRequest.getCol(), symbol);
+
+            String key = getKey(moveRequest);
+
+            if (!gameStructService.isPositionEmpty(gameStruct, moveRequest.getRol(), moveRequest.getCol())) {
+                throw new Exception("INVALID MOVE.");
+            }
+
+            if (player != move.getCurrentPlayer()) {
+                throw new Exception("IT'S NOT THIS PLAYER'S TURN.");
+            }
+
+            gameStruct.getFields().put(key, symbol);
+            gameStructRepository.save(gameStruct);
+
+            match.getMoveList().add(move);
+            matchRepository.save(match);
+
+            if (gameStructService.checkWin(symbol, gameStruct)) {
+                matchService.populateMatchWithWinner(match, StatusMatchEnum.FINISHED);
+                return match;
+            }
+
+            if (gameStructService.checkDrawn(gameStruct)) {
+                matchService.populateMatchWithDrawn(match, StatusMatchEnum.DRAW);
+                return match;
+            }
+
+            return match;
+
+        }catch (Exception exc){
+            throw new Exception(exc);
         }
-        return true;
+    }
+
+
+    private String getKey(MoveRequest moveRequest) {
+        return moveRequest.getRol().concat(moveRequest.getCol());
     }
 
     private String getPlayerSymbol(Player player, Match match) {

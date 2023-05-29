@@ -1,6 +1,7 @@
 package com.br.uni.edu.jogoDaVelha.service.impl;
 
 import com.br.uni.edu.jogoDaVelha.builders.PlayerBuilder;
+import com.br.uni.edu.jogoDaVelha.enums.StatusPlayerEnum;
 import com.br.uni.edu.jogoDaVelha.model.Player;
 import com.br.uni.edu.jogoDaVelha.repositories.PlayerRepository;
 import com.br.uni.edu.jogoDaVelha.requests.CreatePlayerRequest;
@@ -53,6 +54,7 @@ public class PlayerServiceImpl implements PlayerService {
                     .email(playerRequest.getEmail())
                     .password(new String(Base64.getEncoder().encode(playerRequest.getPassword().getBytes())))
                     .active(Boolean.TRUE)
+                    .status(StatusPlayerEnum.ACTIVE)
                     .updatedAt(new Date())
                     .createdAt(new Date())
                     .build();

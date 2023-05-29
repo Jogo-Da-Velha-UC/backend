@@ -1,5 +1,6 @@
 package com.br.uni.edu.jogoDaVelha.builders;
 
+import com.br.uni.edu.jogoDaVelha.enums.StatusPlayerEnum;
 import com.br.uni.edu.jogoDaVelha.model.Player;
 
 import java.util.Date;
@@ -36,6 +37,10 @@ public class PlayerBuilder {
     }
     public PlayerBuilder updatedAt(Date value){
         this.player.setUpdatedAt(value);
+        return this;
+    }
+    public PlayerBuilder status(StatusPlayerEnum value){
+        this.player.setStatus(value);
         return this;
     }
     public Player build()

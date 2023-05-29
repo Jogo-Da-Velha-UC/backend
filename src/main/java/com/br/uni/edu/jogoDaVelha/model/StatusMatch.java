@@ -13,7 +13,7 @@ public class StatusMatch implements Serializable {
     private Long statusMatchId;
     @OneToOne
     private Player winner;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private StatusMatchEnum statusMatchEnum;
     private Date createdAt;
     private Date updatedAt;

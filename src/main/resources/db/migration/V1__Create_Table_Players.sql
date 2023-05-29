@@ -1,6 +1,6 @@
 CREATE TABLE tb_players (
   player_id bigint AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  nickname VARCHAR(100) NOT NULL,
+  nick_name VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL,
   password VARCHAR(50) NOT NULL,
   created_at date NOT NULL,

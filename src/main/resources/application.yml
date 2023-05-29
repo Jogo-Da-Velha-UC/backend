@@ -9,3 +9,6 @@ spring:
       sql: true
   flyway:
     baselineOnMigrate: true
+    url: jdbc:mysql://localhost:3306/db_tic_tac_toe
+    user: root
+    password: Mat123456

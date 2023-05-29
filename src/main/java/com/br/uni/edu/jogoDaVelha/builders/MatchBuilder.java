@@ -3,7 +3,6 @@ package com.br.uni.edu.jogoDaVelha.builders;
 import com.br.uni.edu.jogoDaVelha.model.*;
 
 import java.util.Date;
-import java.util.List;
 
 public class MatchBuilder {
 
@@ -42,7 +41,7 @@ public class MatchBuilder {
         return this;
     }
     public MatchBuilder updateAt(){
-        this.match.setCreatedAt(new Date());
+        this.match.setUpdatedAt(new Date());
         return this;
     }
     public Match build(){

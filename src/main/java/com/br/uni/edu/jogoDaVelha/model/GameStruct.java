@@ -21,20 +21,6 @@ public class GameStruct implements Serializable{
     private Date updatedAt;
     private Date deletedAt;
 
-    public GameStruct() {
-        this.fields.put("00","");
-        this.fields.put("01","");
-        this.fields.put("02","");
-        this.fields.put("10","");
-        this.fields.put("11","");
-        this.fields.put("12","");
-        this.fields.put("20","");
-        this.fields.put("21","");
-        this.fields.put("22","");
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
-
     public Long getGameStructId() {
         return gameStructId;
     }
