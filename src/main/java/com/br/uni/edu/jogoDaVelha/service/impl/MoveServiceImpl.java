@@ -53,11 +53,11 @@ public class MoveServiceImpl implements MoveService {
 
             String symbol = getPlayerSymbol(player, match);
 
-            Move move = createMove(match, player, moveRequest.getRol(), moveRequest.getCol(), symbol);
-
             String key = getKey(moveRequest);
 
-            if (!gameStructService.isPositionEmpty(gameStruct, moveRequest.getRol(), moveRequest.getCol())) {
+            Move move = createMove(match, player, key, symbol);
+
+            if (!gameStructService.isPositionEmpty(gameStruct, key)) {
                 throw new Exception("INVALID MOVE.");
             }
 
@@ -97,10 +97,10 @@ public class MoveServiceImpl implements MoveService {
         return player == match.getPlayerOne() ? "X" : "O";
     }
 
-    private Move createMove(Match match, Player player, String rol, String col, String symbol) {
+    private Move createMove(Match match, Player player, String key, String symbol) {
         Move move = MoveBuilder.builder()
                 .currentPlayer(player)
-                .fields(makeField(rol, col, symbol))
+                .fields(makeField(key, symbol))
                 .match(match)
                 .createdAt(new Date())
                 .updatedAt(new Date())
@@ -110,9 +110,8 @@ public class MoveServiceImpl implements MoveService {
         return move;
     }
 
-    private Map<String, String> makeField(String rol, String col, String symbol) {
+    private Map<String, String> makeField(String key, String symbol) {
         Map<String, String> values = new HashMap<>();
-        String key = rol.concat(col);
         values.put(key, symbol);
         return values;
     }

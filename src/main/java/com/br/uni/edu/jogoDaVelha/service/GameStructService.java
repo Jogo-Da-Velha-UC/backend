@@ -7,7 +7,7 @@ import com.br.uni.edu.jogoDaVelha.model.Player;
 
 public interface GameStructService {
 
-    Boolean isPositionEmpty(GameStruct gameStruct, String rol, String col);
+    Boolean isPositionEmpty(GameStruct gameStruct, String key);
     Boolean checkWin(String symbol, GameStruct gameStruct);
     public Boolean checkDrawn(GameStruct gameStruct);
 }

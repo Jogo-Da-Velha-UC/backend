@@ -9,8 +9,7 @@ import java.util.Map;
 @Service
 public class GameStructServiceImpl implements GameStructService {
     @Override
-    public Boolean isPositionEmpty(GameStruct gameStruct, String rol, String col) {
-        String key = rol.concat(col);
+    public Boolean isPositionEmpty(GameStruct gameStruct, String key) {
         return gameStruct.getFields().get(key).isEmpty();
     }
 
