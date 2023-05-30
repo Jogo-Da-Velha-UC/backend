@@ -1,6 +1,10 @@
 package com.br.uni.edu.jogoDaVelha.service.impl;
 
+import com.br.uni.edu.jogoDaVelha.builders.MatchDtoBuilder;
 import com.br.uni.edu.jogoDaVelha.builders.MoveBuilder;
+import com.br.uni.edu.jogoDaVelha.builders.MoveDtoBuilder;
+import com.br.uni.edu.jogoDaVelha.dtos.MatchDTO;
+import com.br.uni.edu.jogoDaVelha.dtos.MoveDTO;
 import com.br.uni.edu.jogoDaVelha.enums.StatusMatchEnum;
 import com.br.uni.edu.jogoDaVelha.model.*;
 import com.br.uni.edu.jogoDaVelha.repositories.GameStructRepository;
@@ -13,9 +17,7 @@ import com.br.uni.edu.jogoDaVelha.service.MoveService;
 import com.br.uni.edu.jogoDaVelha.service.PlayerService;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MoveServiceImpl implements MoveService {
@@ -37,7 +39,7 @@ public class MoveServiceImpl implements MoveService {
     }
 
     @Override
-    public Match makeMove(MoveRequest moveRequest) throws Exception {
+    public MatchDTO makeMove(MoveRequest moveRequest) throws Exception {
 
         try {
 
@@ -69,20 +71,45 @@ public class MoveServiceImpl implements MoveService {
 
             if (gameStructService.checkWin(symbol, gameStruct)) {
                 matchService.populateMatchWithWinner(match, StatusMatchEnum.FINISHED);
-                return match;
             }
 
             if (gameStructService.checkDrawn(gameStruct)) {
                 matchService.populateMatchWithDrawn(match, StatusMatchEnum.DRAW);
-                return match;
             }
 
             matchRepository.save(match);
-            return match;
+
+            return populateMatchDTO(match, match.getStatusMatch());
 
         } catch (Exception exc) {
             throw new Exception(exc);
         }
+    }
+
+    private MatchDTO populateMatchDTO(Match match, StatusMatch statusMatch) {
+
+        MatchDTO matchDTO = MatchDtoBuilder.builder()
+                .matchId(match.getIdMatch())
+                .playerOne(match.getPlayerOne().getNickName())
+                .playerTwo(match.getPlayerTwo().getNickName())
+                .status(statusMatch.getStatusMatchEnum().name())
+                .moves(getMoveDTOS(match))
+                .winner(statusMatch.getWinner() != null ? statusMatch.getWinner().getNickName() : null)
+                .build();
+        return matchDTO;
+    }
+
+    private List<MoveDTO> getMoveDTOS(Match match) {
+        List<MoveDTO> moveDTOList = new ArrayList<>();
+        for (Move move : match.getMoveList()) {
+            MoveDTO moveDTO = MoveDtoBuilder.builder()
+                    .playerName(move.getCurrentPlayer().getNickName())
+                    .fields(move.getValuesPlayed())
+                    .build();
+            moveDTOList.add(moveDTO);
+        }
+
+        return moveDTOList;
     }
 
     private void positionIsValid(GameStruct gameStruct, String key) throws Exception {
@@ -100,7 +127,7 @@ public class MoveServiceImpl implements MoveService {
     }
 
     private void populateMatchWithFirtsPlayer(Match match, Player player) {
-        if(match.getMoveList().isEmpty()){
+        if (match.getMoveList().isEmpty()) {
             match.setStartedWith(player);
         }
     }

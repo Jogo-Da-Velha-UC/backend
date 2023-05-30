@@ -1,5 +1,6 @@
 package com.br.uni.edu.jogoDaVelha.resource;
 
+import com.br.uni.edu.jogoDaVelha.dtos.MatchDTO;
 import com.br.uni.edu.jogoDaVelha.dtos.Response;
 import com.br.uni.edu.jogoDaVelha.model.Match;
 import com.br.uni.edu.jogoDaVelha.requests.CreateGameRequest;
@@ -26,8 +27,8 @@ public class GameResource {
     }
 
     @PostMapping(value = "/create-game")
-    public ResponseEntity<Response<Match>> createGame(@RequestBody CreateGameRequest createGameRequest){
-        Response<Match> response = new Response<>();
+    public ResponseEntity<Response<MatchDTO>> createGame(@RequestBody CreateGameRequest createGameRequest){
+        Response<MatchDTO> response = new Response<>();
 
         try{
             response.setData(matchService.createMatch(createGameRequest));
@@ -42,8 +43,8 @@ public class GameResource {
     }
 
     @PostMapping(value = "/make-move")
-    public ResponseEntity<Response<Match>> makeMove(@RequestBody MoveRequest moveRequest){
-        Response<Match> response = new Response<>();
+    public ResponseEntity<Response<MatchDTO>> makeMove(@RequestBody MoveRequest moveRequest){
+        Response<MatchDTO> response = new Response<>();
 
         try{
             response.setData(moveService.makeMove(moveRequest));

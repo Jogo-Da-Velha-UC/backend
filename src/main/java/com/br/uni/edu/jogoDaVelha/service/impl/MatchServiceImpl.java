@@ -2,7 +2,9 @@ package com.br.uni.edu.jogoDaVelha.service.impl;
 
 import com.br.uni.edu.jogoDaVelha.builders.GameStructBuilder;
 import com.br.uni.edu.jogoDaVelha.builders.MatchBuilder;
+import com.br.uni.edu.jogoDaVelha.builders.MatchDtoBuilder;
 import com.br.uni.edu.jogoDaVelha.builders.StatusMatchBuilder;
+import com.br.uni.edu.jogoDaVelha.dtos.MatchDTO;
 import com.br.uni.edu.jogoDaVelha.enums.StatusMatchEnum;
 import com.br.uni.edu.jogoDaVelha.model.*;
 import com.br.uni.edu.jogoDaVelha.repositories.GameStructRepository;
@@ -30,7 +32,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match createMatch(CreateGameRequest createGameRequest) throws Exception {
+    public MatchDTO createMatch(CreateGameRequest createGameRequest) throws Exception {
 
         try {
 
@@ -62,7 +64,11 @@ public class MatchServiceImpl implements MatchService {
                 }
             }
 
-            return matchRepository.save(match);
+            matchRepository.save(match);
+
+            return MatchDtoBuilder.builder()
+                    .matchId(match.getIdMatch())
+                    .status(match.getStatusMatch().getStatusMatchEnum().name()).build();
         } catch (Exception e) {
             throw new Exception(e);
         }
