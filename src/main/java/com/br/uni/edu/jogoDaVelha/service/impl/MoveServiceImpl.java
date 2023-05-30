@@ -56,16 +56,13 @@ public class MoveServiceImpl implements MoveService {
 
             final String key = getKey(moveRequest);
 
-            if (!gameStructService.isPositionEmpty(gameStruct, key)) {
-                throw new Exception("INVALID MOVE.");
-            }
+            positionIsValid(gameStruct, key);
 
             populateMatchWithFirtsPlayer(match, player);
 
             checkIfPlayerIsEligibleToPlay(match, player);
 
-            final Move move = createMove(match, player, key, symbol);
-            match.getMoveList().add(move);
+            match.getMoveList().add(createMove(match, player, key, symbol));
 
             gameStruct.getFields().put(key, symbol);
             gameStructRepository.save(gameStruct);
@@ -88,7 +85,13 @@ public class MoveServiceImpl implements MoveService {
         }
     }
 
-    private static void checkIfPlayerIsEligibleToPlay(Match match, Player player) throws Exception {
+    private void positionIsValid(GameStruct gameStruct, String key) throws Exception {
+        if (!gameStructService.isPositionEmpty(gameStruct, key)) {
+            throw new Exception("INVALID MOVE.");
+        }
+    }
+
+    private void checkIfPlayerIsEligibleToPlay(Match match, Player player) throws Exception {
         if (!match.getMoveList().isEmpty()) {
             if (player == match.getMoveList().get(match.getMoveList().size() - 1).getCurrentPlayer()) {
                 throw new Exception("IT'S NOT THIS PLAYER'S TURN.");
@@ -96,7 +99,7 @@ public class MoveServiceImpl implements MoveService {
         }
     }
 
-    private static void populateMatchWithFirtsPlayer(Match match, Player player) {
+    private void populateMatchWithFirtsPlayer(Match match, Player player) {
         if(match.getMoveList().isEmpty()){
             match.setStartedWith(player);
         }
