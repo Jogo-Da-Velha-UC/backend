@@ -80,15 +80,9 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void populateMatchWithDrawn(Match match, StatusMatchEnum statusMatchEnum) {
-        StatusMatch statusMatch = StatusMatchBuilder.builder()
-                .statusMatch(statusMatchEnum)
-                .createdAt()
-                .updatedAt()
-                .build();
-
+        StatusMatch statusMatch = match.getStatusMatch();
+        statusMatch.setStatusMatchEnum(StatusMatchEnum.DRAW);
         statusMatchRepository.save(statusMatch);
-
-        match.setStatusMatch(statusMatch);
     }
 
     private void populateMatchWithOtherPlayer(Match match, Player player) {
@@ -131,15 +125,9 @@ public class MatchServiceImpl implements MatchService {
     public void populateMatchWithWinner(Match match, StatusMatchEnum statusMatchEnum) {
         final int size = match.getMoveList().size();
         final Move move = match.getMoveList().get(size - 1);
-        StatusMatch statusMatch = StatusMatchBuilder.builder()
-                .statusMatch(statusMatchEnum)
-                .winner(move.getCurrentPlayer())
-                .createdAt()
-                .updatedAt()
-                .build();
-
+        StatusMatch statusMatch = match.getStatusMatch();
+        statusMatch.setStatusMatchEnum(statusMatchEnum);
+        statusMatch.setWinner(move.getCurrentPlayer());
         statusMatchRepository.save(statusMatch);
-
-        match.setStatusMatch(statusMatch);
     }
 }

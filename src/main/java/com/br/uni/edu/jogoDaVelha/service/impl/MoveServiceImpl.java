@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 @Service
 public class MoveServiceImpl implements MoveService {
 
@@ -40,36 +41,34 @@ public class MoveServiceImpl implements MoveService {
 
         try {
 
-            Match match = matchRepository.findById(moveRequest.getMatchId()).orElseThrow(()
+            final Match match = matchRepository.findById(moveRequest.getMatchId()).orElseThrow(()
                     -> new Exception("GAME NOT FOUND!!!"));
 
-            if(match.getPlayerOne() == null || match.getPlayerTwo() == null){
+            if (match.getPlayerOne() == null || match.getPlayerTwo() == null) {
                 throw new Exception("INVALID MATCH.");
             }
 
-            GameStruct gameStruct = match.getGameStruct();
+            final GameStruct gameStruct = match.getGameStruct();
 
-            Player player = playerService.findByUsername(moveRequest.getPlayerOne());
+            final Player player = playerService.findByUsername(moveRequest.getPlayerOne());
 
-            String symbol = getPlayerSymbol(player, match);
+            final String symbol = getPlayerSymbol(player, match);
 
-            String key = getKey(moveRequest);
-
-            Move move = createMove(match, player, key, symbol);
+            final String key = getKey(moveRequest);
 
             if (!gameStructService.isPositionEmpty(gameStruct, key)) {
                 throw new Exception("INVALID MOVE.");
             }
 
-            if (player != move.getCurrentPlayer()) {
-                throw new Exception("IT'S NOT THIS PLAYER'S TURN.");
-            }
+            populateMatchWithFirtsPlayer(match, player);
+
+            checkIfPlayerIsEligibleToPlay(match, player);
+
+            final Move move = createMove(match, player, key, symbol);
+            match.getMoveList().add(move);
 
             gameStruct.getFields().put(key, symbol);
             gameStructRepository.save(gameStruct);
-
-            match.getMoveList().add(move);
-            matchRepository.save(match);
 
             if (gameStructService.checkWin(symbol, gameStruct)) {
                 matchService.populateMatchWithWinner(match, StatusMatchEnum.FINISHED);
@@ -81,10 +80,25 @@ public class MoveServiceImpl implements MoveService {
                 return match;
             }
 
+            matchRepository.save(match);
             return match;
 
-        }catch (Exception exc){
+        } catch (Exception exc) {
             throw new Exception(exc);
+        }
+    }
+
+    private static void checkIfPlayerIsEligibleToPlay(Match match, Player player) throws Exception {
+        if (!match.getMoveList().isEmpty()) {
+            if (player == match.getMoveList().get(match.getMoveList().size() - 1).getCurrentPlayer()) {
+                throw new Exception("IT'S NOT THIS PLAYER'S TURN.");
+            }
+        }
+    }
+
+    private static void populateMatchWithFirtsPlayer(Match match, Player player) {
+        if(match.getMoveList().isEmpty()){
+            match.setStartedWith(player);
         }
     }
 
@@ -98,7 +112,7 @@ public class MoveServiceImpl implements MoveService {
     }
 
     private Move createMove(Match match, Player player, String key, String symbol) {
-        Move move = MoveBuilder.builder()
+        final Move move = MoveBuilder.builder()
                 .currentPlayer(player)
                 .fields(makeField(key, symbol))
                 .match(match)

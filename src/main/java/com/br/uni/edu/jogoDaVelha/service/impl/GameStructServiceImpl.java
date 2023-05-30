@@ -35,8 +35,8 @@ public class GameStructServiceImpl implements GameStructService {
     @Override
     public Boolean checkDrawn(GameStruct gameStruct) {
         Map<String, String> fields = gameStruct.getFields();
-        for (String key : fields.keySet()) {
-            if (key.isBlank()) {
+        for (String key : fields.values()) {
+            if (key.isEmpty()) {
                 return false;
             }
         }
