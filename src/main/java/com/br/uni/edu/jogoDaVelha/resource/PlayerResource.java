@@ -1,5 +1,6 @@
 package com.br.uni.edu.jogoDaVelha.resource;
 
+import com.br.uni.edu.jogoDaVelha.dtos.PlayerDto;
 import com.br.uni.edu.jogoDaVelha.model.Player;
 import com.br.uni.edu.jogoDaVelha.dtos.Response;
 import com.br.uni.edu.jogoDaVelha.requests.CreatePlayerRequest;
@@ -21,8 +22,8 @@ public class PlayerResource {
     }
 
     @PostMapping
-    public ResponseEntity<Response<Player>> savePlayer(@RequestBody CreatePlayerRequest playerRequest){
-        Response<Player> response = new Response<>();
+    public ResponseEntity<Response<PlayerDto>> savePlayer(@RequestBody CreatePlayerRequest playerRequest){
+        Response<PlayerDto> response = new Response<>();
         try{
             response.setData(playerService.savePlayer(playerRequest));
             response.setStatusCode(HttpStatus.CREATED.value());
@@ -36,8 +37,8 @@ public class PlayerResource {
     }
 
     @DeleteMapping
-    public ResponseEntity<Response<Player>> deletePLayer(@RequestBody Long uuid){
-        Response<Player> response = new Response<>();
+    public ResponseEntity<Response<PlayerDto>> deletePLayer(@RequestBody Long uuid){
+        Response<PlayerDto> response = new Response<>();
         try{
             playerService.deletePlayer(uuid);
             response.setStatusCode(HttpStatus.OK.value());
@@ -52,11 +53,10 @@ public class PlayerResource {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response<Player>> update(@PathVariable Long id, @RequestBody Player player){
-        Response<Player> response = new Response<>();
+    public ResponseEntity<Response<PlayerDto>> update(@PathVariable Long id, @RequestBody Player player){
+        Response<PlayerDto> response = new Response<>();
         try{
-            Player playerUpdt = playerService.updatePlayer(id, player);
-            response.setData(playerUpdt);
+            response.setData(playerService.updatePlayer(id, player));
             response.setStatusCode(HttpStatus.OK.value());
         }catch (Exception e){
             response.setStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -69,11 +69,11 @@ public class PlayerResource {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<Player>> findById(@PathVariable Long id){
-        Response<Player> response = new Response<>();
+    public ResponseEntity<Response<PlayerDto>> findById(@PathVariable Long id){
+        Response<PlayerDto> response = new Response<>();
         try{
-            Player player = playerService.findById(id);
-            response.setData(player);
+
+            response.setData(playerService.findById(id));
             response.setStatusCode(HttpStatus.OK.value());
         }catch (Exception e){
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -86,11 +86,10 @@ public class PlayerResource {
 
 
     @GetMapping
-    public ResponseEntity<Response<List<Player>>> findAll(){
-        Response<List<Player>> response = new Response<>();
+    public ResponseEntity<Response<List<PlayerDto>>> findAll(){
+        Response<List<PlayerDto>> response = new Response<>();
         try{
-            List<Player> players = playerService.findAll();
-            response.setData(players);
+            response.setData(playerService.findAll());
             response.setStatusCode(HttpStatus.OK.value());
         }catch (Exception e){
             response.setStatusCode(HttpStatus.BAD_REQUEST.value());

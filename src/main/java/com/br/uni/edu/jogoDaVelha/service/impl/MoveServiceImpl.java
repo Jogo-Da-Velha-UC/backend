@@ -1,8 +1,6 @@
 package com.br.uni.edu.jogoDaVelha.service.impl;
 
-import com.br.uni.edu.jogoDaVelha.builders.MatchDtoBuilder;
 import com.br.uni.edu.jogoDaVelha.builders.MoveBuilder;
-import com.br.uni.edu.jogoDaVelha.builders.MoveDtoBuilder;
 import com.br.uni.edu.jogoDaVelha.dtos.MatchDTO;
 import com.br.uni.edu.jogoDaVelha.dtos.MoveDTO;
 import com.br.uni.edu.jogoDaVelha.enums.StatusMatchEnum;
@@ -15,6 +13,7 @@ import com.br.uni.edu.jogoDaVelha.service.GameStructService;
 import com.br.uni.edu.jogoDaVelha.service.MatchService;
 import com.br.uni.edu.jogoDaVelha.service.MoveService;
 import com.br.uni.edu.jogoDaVelha.service.PlayerService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,14 +27,16 @@ public class MoveServiceImpl implements MoveService {
     private final MatchService matchService;
     private final PlayerService playerService;
     private final GameStructService gameStructService;
+    private final ModelMapper moveMapper;
 
-    public MoveServiceImpl(MoveRepository moveRepository, GameStructRepository gameStructRepository, MatchRepository matchRepository, MatchService matchService, PlayerService playerService, GameStructService gameStructService) {
+    public MoveServiceImpl(MoveRepository moveRepository, GameStructRepository gameStructRepository, MatchRepository matchRepository, MatchService matchService, PlayerService playerService, GameStructService gameStructService, ModelMapper moveMapper) {
         this.moveRepository = moveRepository;
         this.gameStructRepository = gameStructRepository;
         this.matchRepository = matchRepository;
         this.matchService = matchService;
         this.playerService = playerService;
         this.gameStructService = gameStructService;
+        this.moveMapper = moveMapper;
     }
 
     @Override
@@ -66,8 +67,7 @@ public class MoveServiceImpl implements MoveService {
 
             match.getMoveList().add(createMove(match, player, key, symbol));
 
-            gameStruct.getFields().put(key, symbol);
-            gameStructRepository.save(gameStruct);
+            makeMove(gameStruct, symbol, key);
 
             if (gameStructService.checkWin(symbol, gameStruct)) {
                 matchService.populateMatchWithWinner(match, StatusMatchEnum.FINISHED);
@@ -79,37 +79,19 @@ public class MoveServiceImpl implements MoveService {
 
             matchRepository.save(match);
 
-            return populateMatchDTO(match, match.getStatusMatch());
+            return moveMapper.map(match, MatchDTO.class);
 
         } catch (Exception exc) {
             throw new Exception(exc);
         }
     }
 
-    private MatchDTO populateMatchDTO(Match match, StatusMatch statusMatch) {
-
-        MatchDTO matchDTO = MatchDtoBuilder.builder()
-                .matchId(match.getIdMatch())
-                .playerOne(match.getPlayerOne().getNickName())
-                .playerTwo(match.getPlayerTwo().getNickName())
-                .status(statusMatch.getStatusMatchEnum().name())
-                .moves(getMoveDTOS(match))
-                .winner(statusMatch.getWinner() != null ? statusMatch.getWinner().getNickName() : null)
-                .build();
-        return matchDTO;
-    }
-
-    private List<MoveDTO> getMoveDTOS(Match match) {
-        List<MoveDTO> moveDTOList = new ArrayList<>();
-        for (Move move : match.getMoveList()) {
-            MoveDTO moveDTO = MoveDtoBuilder.builder()
-                    .playerName(move.getCurrentPlayer().getNickName())
-                    .fields(move.getValuesPlayed())
-                    .build();
-            moveDTOList.add(moveDTO);
-        }
-
-        return moveDTOList;
+    private void makeMove(GameStruct gameStruct, String symbol, String key) {
+        Map<String,String> newFields = new HashMap<>();
+        newFields.putAll(gameStruct.getFields());
+        newFields.put(key, symbol);
+        gameStruct.setFields(newFields);
+        gameStructRepository.save(gameStruct);
     }
 
     private void positionIsValid(GameStruct gameStruct, String key) throws Exception {

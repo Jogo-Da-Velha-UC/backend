@@ -9,10 +9,9 @@ import com.br.uni.edu.jogoDaVelha.service.MatchService;
 import com.br.uni.edu.jogoDaVelha.service.MoveService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/game")
@@ -35,6 +34,38 @@ public class GameResource {
             response.setStatusCode(HttpStatus.CREATED.value());
         }catch (Exception e){
             response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            response.setError(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body(response);
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Response<MatchDTO>> getGame(@PathVariable Long id){
+        Response<MatchDTO> response = new Response<>();
+
+        try{
+            response.setData(matchService.findMatch(id));
+            response.setStatusCode(HttpStatus.OK.value());
+        }catch (Exception e){
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            response.setError(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body(response);
+
+    }
+
+    @GetMapping("/player/{id}")
+    public ResponseEntity<Response<List<MatchDTO>>> findMatchesByUser(@PathVariable Long id){
+        Response<List<MatchDTO>> response = new Response<>();
+
+        try{
+            response.setData(matchService.findMatchesByUser(id));
+            response.setStatusCode(HttpStatus.OK.value());
+        }catch (Exception e){
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
             response.setError(e.getMessage());
         }
 

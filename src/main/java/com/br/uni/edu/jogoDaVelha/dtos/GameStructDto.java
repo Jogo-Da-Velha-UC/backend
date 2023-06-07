@@ -1,26 +1,18 @@
-package com.br.uni.edu.jogoDaVelha.model;
+package com.br.uni.edu.jogoDaVelha.dtos;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.descriptor.jdbc.JsonJdbcType;
-
-import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
-@Entity
-@Table(name = "tb_game_structs")
-public class GameStruct implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class GameStructDto {
+
     private Long gameStructId;
-    @JdbcType(value = JsonJdbcType.class)
-    private Map<String, String> fields = new HashMap<>();
+    private Map<String, String> fields;
     private Date createdAt;
     private Date updatedAt;
     private Date deletedAt;
+
+    public GameStructDto() {
+    }
 
     public Long getGameStructId() {
         return gameStructId;

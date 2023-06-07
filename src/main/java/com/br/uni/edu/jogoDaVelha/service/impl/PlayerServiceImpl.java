@@ -1,28 +1,32 @@
 package com.br.uni.edu.jogoDaVelha.service.impl;
 
 import com.br.uni.edu.jogoDaVelha.builders.PlayerBuilder;
+import com.br.uni.edu.jogoDaVelha.dtos.PlayerDto;
 import com.br.uni.edu.jogoDaVelha.enums.StatusPlayerEnum;
 import com.br.uni.edu.jogoDaVelha.model.Player;
 import com.br.uni.edu.jogoDaVelha.repositories.PlayerRepository;
 import com.br.uni.edu.jogoDaVelha.requests.CreatePlayerRequest;
 import com.br.uni.edu.jogoDaVelha.service.PlayerService;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.data.domain.Pageable;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository) {
+    private final ModelMapper modelMapper;
+
+    public PlayerServiceImpl(PlayerRepository playerRepository, ModelMapper modelMapper) {
         this.playerRepository = playerRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class PlayerServiceImpl implements PlayerService {
                 throw new Exception(String.format("Id %s not found", id));
             }
 
-            final Player byId = findById(id);
+            final Player byId = playerRepository.findById(id).orElseThrow(() -> new Exception("Player Not Found"));
             byId.setDeletedAt(new Date());
             byId.setActive(Boolean.FALSE);
             playerRepository.save(byId);
@@ -43,7 +47,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player savePlayer(CreatePlayerRequest playerRequest) throws Exception {
+    public PlayerDto savePlayer(CreatePlayerRequest playerRequest) throws Exception {
         try {
             if (ObjectUtils.isEmpty(playerRequest)) {
                 throw new Exception(String.format("Player cannot null"));
@@ -58,28 +62,20 @@ public class PlayerServiceImpl implements PlayerService {
                     .updatedAt(new Date())
                     .createdAt(new Date())
                     .build();
-
-            return playerRepository.save(player);
+            playerRepository.save(player);
+            return modelMapper.map(player, PlayerDto.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
     @Override
-    public List<Player> findAll() {
-        List<Player> all = new ArrayList<>();
-        for (Player player:
-                playerRepository.findAll()) {
-            if (player.getActive() == Boolean.TRUE){
-                all.add(player);
-            }
-        };
-
-        return all;
+    public List<PlayerDto> findAll() {
+        return playerRepository.findAll().stream().map(x -> modelMapper.map(x, PlayerDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    public Player updatePlayer(Long id, Player player) throws Exception {
+    public PlayerDto updatePlayer(Long id, Player player) throws Exception {
         try {
             if (id == null) {
                 throw new Exception("id cannot be null!");
@@ -88,10 +84,11 @@ public class PlayerServiceImpl implements PlayerService {
             Player playerUpdt = playerRepository.findById(id).orElseThrow();
 
             if (playerRepository.findByEmail(player.getEmail()).isPresent() &&
-                    playerUpdt.getNickName().equals(player.getNickName())){
+                    playerUpdt.getNickName().equals(player.getNickName())) {
                 playerUpdt.setEmail(player.getEmail());
                 playerUpdt.setNickName(player.getNickName());
-                return playerRepository.save(playerUpdt);
+                playerRepository.save(player);
+                return modelMapper.map(player, PlayerDto.class);
             }
 
             throw new Exception("Email in use!");
@@ -103,17 +100,20 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player findById(Long id) throws Exception {
+    public PlayerDto findById(Long id) throws Exception {
         try {
-            return playerRepository.findById(id).orElseThrow();
+            final Player player = playerRepository.findById(id).orElseThrow();
+            return modelMapper.map(player, PlayerDto.class);
         } catch (Exception e) {
             throw new Exception(String.format("Id %s not found", id));
         }
     }
+
     @Override
     public Player findByUsername(String nickName) throws Exception {
         try {
-            return playerRepository.findByNickName(nickName).orElseThrow();
+            final Player player = playerRepository.findByNickName(nickName).orElseThrow();
+            return player;
         } catch (Exception e) {
             throw new Exception(String.format("UserName %s not found", nickName));
         }

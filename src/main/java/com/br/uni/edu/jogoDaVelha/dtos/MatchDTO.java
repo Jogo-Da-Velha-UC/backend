@@ -1,17 +1,23 @@
 package com.br.uni.edu.jogoDaVelha.dtos;
 
-import com.br.uni.edu.jogoDaVelha.model.Move;
+import com.br.uni.edu.jogoDaVelha.model.StatusMatch;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MatchDTO {
+public class MatchDTO implements Serializable {
 
     private Long matchId;
-    private String playerOne;
-    private String playerTwo;
-    private List<MoveDTO> moveList;
-    private String statusMatch;
-    private String winner;
+    private PlayerDto playerOne;
+    private PlayerDto playerTwo;
+    private List<MoveDTO> moveList = new ArrayList<>();
+    private GameStructDto gameStruct;
+    private StatusMatch statusMatch;
+    private PlayerDto winner;
+
+    public MatchDTO() {
+    }
 
     public Long getMatchId() {
         return matchId;
@@ -21,19 +27,19 @@ public class MatchDTO {
         this.matchId = matchId;
     }
 
-    public String getPlayerOne() {
+    public PlayerDto getPlayerOne() {
         return playerOne;
     }
 
-    public void setPlayerOne(String playerOne) {
+    public void setPlayerOne(PlayerDto playerOne) {
         this.playerOne = playerOne;
     }
 
-    public String getPlayerTwo() {
+    public PlayerDto getPlayerTwo() {
         return playerTwo;
     }
 
-    public void setPlayerTwo(String playerTwo) {
+    public void setPlayerTwo(PlayerDto playerTwo) {
         this.playerTwo = playerTwo;
     }
 
@@ -45,19 +51,28 @@ public class MatchDTO {
         this.moveList = moveList;
     }
 
-    public String getStatusMatch() {
+    public GameStructDto getGameStruct() {
+        return gameStruct;
+    }
+
+    public void setGameStruct(GameStructDto gameStruct) {
+        this.gameStruct = gameStruct;
+    }
+
+    public StatusMatch getStatusMatch() {
         return statusMatch;
     }
 
-    public void setStatusMatch(String statusMatch) {
+    public void setStatusMatch(StatusMatch statusMatch) {
         this.statusMatch = statusMatch;
     }
 
-    public String getWinner() {
+    public PlayerDto getWinner() {
         return winner;
     }
 
-    public void setWinner(String winner) {
+    public void setWinner(PlayerDto winner) {
         this.winner = winner;
     }
+
 }
