@@ -25,7 +25,7 @@ public class Match implements Serializable {
     @OneToOne
     private Player startedWith;
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "match")
     private List<Move> moveList = new ArrayList<>();
     private Date createdAt;

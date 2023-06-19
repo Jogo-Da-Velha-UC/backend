@@ -46,33 +46,33 @@ public class MatchServiceImpl implements MatchService {
 
             Match match = null;
 
-            Player player = playerService.findByUsername(createGameRequest.getPlayer());
+            Player playerOne = playerService.findByUsername(createGameRequest.getPlayerOne());
 
-            if (player == null) {
+            Player playerTwo = playerService.findByUsername(createGameRequest.getPlayerTwo());
+
+            if (playerOne == null || playerTwo == null) {
                 throw new Exception("YOU NEED ONE PLAYER TO CREATE THE MATCH!");
             }
 
-            if (findMatchWithOnePlayer() == null) {
+            if (findMatchStarted(playerOne.getNickName(),playerTwo.getNickName()) == null) {
 
                 GameStruct gameStruct = createGameStruct();
 
                 StatusMatch statusMatch = createStatusMatch();
 
                 match = MatchBuilder.builder()
-                        .playerOne(player)
+                        .playerOne(playerOne)
+                        .playerTwo(playerTwo)
                         .gameStruct(gameStruct)
                         .statusMatch(statusMatch)
                         .createdAt()
                         .updateAt()
                         .build();
-            } else {
-                match = findMatchWithOnePlayer();
-                if (match.getPlayerOne() != null) {
-                    populateMatchWithOtherPlayer(match, player);
-                }
-            }
 
-            matchRepository.save(match);
+                matchRepository.save(match);
+            } else {
+                match = findMatchStarted(playerOne.getNickName(),playerTwo.getNickName());
+            }
 
             return matchMapper.map(match, MatchDTO.class);
         } catch (Exception e) {
@@ -81,9 +81,9 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match findMatchWithOnePlayer() {
+    public Match findMatchStarted(String p1, String p2) {
         try {
-            return matchRepository.findMatchWithOneOnlyPlayer();
+            return matchRepository.findMatchWithOneOnlyPlayer(p1,p2);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -106,7 +106,7 @@ public class MatchServiceImpl implements MatchService {
                         .statusMatch(match.getStatusMatch())
                         .addMoveInList(match.getMoveList())
                         .playerOne(match.getPlayerOne())
-                        .playerTwo(match.getPlayerTwo() != null ? match.getPlayerTwo() : null)
+                        .playerTwo(match.getPlayerTwo())
                         .gameStruct(matchMapper.map(match.getGameStruct(), GameStructDto.class))
                         .build();
                 matchDTOList.add(matchDTO);
@@ -150,12 +150,6 @@ public class MatchServiceImpl implements MatchService {
         statusMatchRepository.save(statusMatch);
     }
 
-    private void populateMatchWithOtherPlayer(Match match, Player player) {
-        match.setPlayerTwo(player);
-        match.setUpdatedAt(new Date());
-        match.setStatusMatch(updateStatusMatch(match.getStatusMatch()));
-    }
-
     private GameStruct createGameStruct() {
         GameStruct gameStruct = GameStructBuilder.builder()
                 .createFieldsEmpty()
@@ -170,20 +164,13 @@ public class MatchServiceImpl implements MatchService {
 
     private StatusMatch createStatusMatch() {
         StatusMatch statusMatch = StatusMatchBuilder.builder()
-                .statusMatch(StatusMatchEnum.WAITING_FOR_PLAYER)
+                .statusMatch(StatusMatchEnum.ACTIVE)
                 .createdAt()
                 .updatedAt()
                 .build();
 
         statusMatchRepository.save(statusMatch);
         return statusMatch;
-    }
-
-    private StatusMatch updateStatusMatch(StatusMatch statusOld) {
-        StatusMatch statusNew = statusOld;
-        statusNew.setStatusMatchEnum(StatusMatchEnum.ACTIVE);
-        statusMatchRepository.save(statusNew);
-        return statusNew;
     }
 
     @Override

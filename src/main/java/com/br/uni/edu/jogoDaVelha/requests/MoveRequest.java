@@ -2,7 +2,7 @@ package com.br.uni.edu.jogoDaVelha.requests;
 
 public class MoveRequest {
 
-    private String playerOne;
+    private String player;
     private Long matchId;
     private String rol;
     private String col;
@@ -10,12 +10,12 @@ public class MoveRequest {
     public MoveRequest() {
     }
 
-    public String getPlayerOne() {
-        return playerOne;
+    public String getPlayer() {
+        return player;
     }
 
-    public void setPlayerOne(String playerOne) {
-        this.playerOne = playerOne;
+    public void setPlayer(String player) {
+        this.player = player;
     }
 
     public Long getMatchId() {

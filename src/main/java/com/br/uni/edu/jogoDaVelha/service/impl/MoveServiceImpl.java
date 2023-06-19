@@ -53,7 +53,7 @@ public class MoveServiceImpl implements MoveService {
 
             final GameStruct gameStruct = match.getGameStruct();
 
-            final Player player = playerService.findByUsername(moveRequest.getPlayerOne());
+            final Player player = playerService.findByUsername(moveRequest.getPlayer());
 
             final String symbol = getPlayerSymbol(player, match);
 

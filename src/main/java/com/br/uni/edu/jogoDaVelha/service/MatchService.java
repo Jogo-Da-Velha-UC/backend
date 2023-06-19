@@ -12,7 +12,7 @@ public interface MatchService {
     MatchDTO createMatch(CreateGameRequest createGameRequest) throws Exception;
     void populateMatchWithDrawn(Match match, StatusMatchEnum statusMatchEnum);
     void populateMatchWithWinner(Match match, StatusMatchEnum statusMatchEnum);
-    Match findMatchWithOnePlayer();
+    Match findMatchStarted(String p1, String p2);
     MatchDTO findMatch(Long id) throws Exception;
     List<MatchDTO> findMatchesByUser(Long id) throws Exception;
 }
