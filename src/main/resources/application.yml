@@ -1,11 +1,33 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: ${PASS-DB}
-    url: ${URL-DB}
-    username: ${USER-DB}
+    password: ${DB_PASS}
+    url: ${DB_URL}
+    username: ${DB_USER}
   jpa:
     show:
-      sql: ${SHOW-SQL}
+      sql: true
   flyway:
     baselineOnMigrate: true
+
+#spring:
+#  datasource:
+#    password:
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#  jpa:
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format-sql: true
+#        ddl-auto: create-update
+#    database-platform: org.hibernate.dialect.H2Dialect
+#  h2:
+#    console:
+#      enabled: true
+#      settings:
+#        web-allow-others: true
+#    allowed:
+#      resources: /h2-console/**
+#  flyway:
+#    baselineOnMigrate: true
