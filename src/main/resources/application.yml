@@ -1,29 +1,29 @@
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    password: Mat123456
-    url: jdbc:mysql://localhost:3306/db_tic_tac_toe?useTimezone=true&serverTimezone=America/Sao_Paulo
-    username: root
-  jpa:
-    show:
-      sql: true
-  flyway:
-    baselineOnMigrate: true
-    url: jdbc:mysql://localhost:3306/db_tic_tac_toe
-    user: root
-    password: Mat123456
-
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
-#    password: ${DB_PASS}
-#    url: ${DB_URL}
-#    username: ${DB_USER}
+#    password: Mat123456
+#    url: jdbc:mysql://localhost:3306/db_tic_tac_toe?useTimezone=true&serverTimezone=America/Sao_Paulo
+#    username: root
 #  jpa:
 #    show:
 #      sql: true
 #  flyway:
 #    baselineOnMigrate: true
+#    url: jdbc:mysql://localhost:3306/db_tic_tac_toe
+#    user: root
+#    password: Mat123456
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: ${DB_PASS}
+    url: ${DB_URL}
+    username: ${DB_USER}
+  jpa:
+    show:
+      sql: true
+  flyway:
+    baselineOnMigrate: true
 
 #spring:
 #  datasource:
