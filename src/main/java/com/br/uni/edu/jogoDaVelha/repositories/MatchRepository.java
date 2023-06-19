@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface MatchRepository extends JpaRepository<Match, Long> {
 
-    @Query(value = "SELECT match FROM Match match WHERE match.playerOne.nickName = :playerOne AND match.playerTwo.nickName = :playerTwo")
+    @Query(value = "SELECT match FROM Match match WHERE match.playerOne.nickName = :playerOne AND match.playerTwo.nickName = :playerTwo AND match.statusMatch.statusMatchEnum = ACTIVE")
     Match findMatchWithOneOnlyPlayer(String playerOne, String playerTwo);
 
     @Query(value = "SELECT match FROM Match match WHERE match.playerOne.playerId = :id OR match.playerTwo.playerId = :id")
