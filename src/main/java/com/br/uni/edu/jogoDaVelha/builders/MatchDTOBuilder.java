@@ -1,9 +1,6 @@
 package com.br.uni.edu.jogoDaVelha.builders;
 
-import com.br.uni.edu.jogoDaVelha.dtos.GameStructDto;
-import com.br.uni.edu.jogoDaVelha.dtos.MatchDTO;
-import com.br.uni.edu.jogoDaVelha.dtos.MoveDTO;
-import com.br.uni.edu.jogoDaVelha.dtos.PlayerDto;
+import com.br.uni.edu.jogoDaVelha.dtos.*;
 import com.br.uni.edu.jogoDaVelha.model.Move;
 import com.br.uni.edu.jogoDaVelha.model.Player;
 import com.br.uni.edu.jogoDaVelha.model.StatusMatch;
@@ -47,7 +44,7 @@ public class MatchDTOBuilder {
         return this;
     }
 
-    public MatchDTOBuilder statusMatch(StatusMatch statusMatch) {
+    public MatchDTOBuilder statusMatch(StatusMatchDto statusMatch) {
         this.match.setStatusMatch(statusMatch);
         return this;
     }

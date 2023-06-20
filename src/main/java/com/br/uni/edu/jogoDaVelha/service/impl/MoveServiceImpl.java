@@ -71,6 +71,8 @@ public class MoveServiceImpl implements MoveService {
 
             if (gameStructService.checkWin(symbol, gameStruct)) {
                 matchService.populateMatchWithWinner(match, StatusMatchEnum.FINISHED);
+                matchRepository.save(match);
+                return moveMapper.map(match, MatchDTO.class);
             }
 
             if (gameStructService.checkDrawn(gameStruct)) {

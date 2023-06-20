@@ -6,6 +6,7 @@ import com.br.uni.edu.jogoDaVelha.builders.MatchDTOBuilder;
 import com.br.uni.edu.jogoDaVelha.builders.StatusMatchBuilder;
 import com.br.uni.edu.jogoDaVelha.dtos.GameStructDto;
 import com.br.uni.edu.jogoDaVelha.dtos.MatchDTO;
+import com.br.uni.edu.jogoDaVelha.dtos.StatusMatchDto;
 import com.br.uni.edu.jogoDaVelha.enums.StatusMatchEnum;
 import com.br.uni.edu.jogoDaVelha.model.*;
 import com.br.uni.edu.jogoDaVelha.repositories.GameStructRepository;
@@ -103,7 +104,7 @@ public class MatchServiceImpl implements MatchService {
             for (Match match : matchList.get()) {
                 MatchDTO matchDTO = MatchDTOBuilder.builder()
                         .matchId(match.getIdMatch())
-                        .statusMatch(match.getStatusMatch())
+                        .statusMatch(matchMapper.map(match.getStatusMatch(), StatusMatchDto.class))
                         .addMoveInList(match.getMoveList())
                         .playerOne(match.getPlayerOne())
                         .playerTwo(match.getPlayerTwo())
@@ -129,7 +130,7 @@ public class MatchServiceImpl implements MatchService {
             }
 
             MatchDTO matchDTO = MatchDTOBuilder.builder()
-                    .statusMatch(match.getStatusMatch())
+                    .statusMatch(matchMapper.map(match.getStatusMatch(), StatusMatchDto.class))
                     .addMoveInList(match.getMoveList())
                     .playerOne(match.getPlayerOne())
                     .playerTwo(match.getPlayerTwo() != null ? match.getPlayerTwo() : null)

@@ -17,16 +17,28 @@ public class GameStructServiceImpl implements GameStructService {
     public Boolean checkWin(String symbol, GameStruct gameStruct) {
         Map<String, String> fields = gameStruct.getFields();
 
-        if (fields.get("00") == symbol && fields.get("01") == symbol && fields.get("02") == symbol) {
+        if (fields.get("00").equals(symbol) && fields.get("01").equals(symbol) && fields.get("02").equals(symbol)) {
             return true;
         }
-        if (fields.get("00") == symbol && fields.get("10") == symbol && fields.get("20") == symbol) {
+        if (fields.get("00").equals(symbol) && fields.get("10").equals(symbol) && fields.get("20").equals(symbol)) {
             return true;
         }
-        if (fields.get("00") == symbol && fields.get("11") == symbol && fields.get("22") == symbol) {
+        if (fields.get("00").equals(symbol) && fields.get("11").equals(symbol) && fields.get("22").equals(symbol)) {
             return true;
         }
-        if (fields.get("02") == symbol && fields.get("11") == symbol && fields.get("20") == symbol) {
+        if (fields.get("02").equals(symbol) && fields.get("11").equals(symbol) && fields.get("20").equals(symbol)) {
+            return true;
+        }
+        if (fields.get("10").equals(symbol) && fields.get("11").equals(symbol) && fields.get("12").equals(symbol)) {
+            return true;
+        }
+        if (fields.get("20").equals(symbol) && fields.get("21").equals(symbol) && fields.get("22").equals(symbol)) {
+            return true;
+        }
+        if (fields.get("01").equals(symbol) && fields.get("11").equals(symbol) && fields.get("21").equals(symbol)) {
+            return true;
+        }
+        if (fields.get("02").equals(symbol) && fields.get("12").equals(symbol) && fields.get("22").equals(symbol)) {
             return true;
         }
 

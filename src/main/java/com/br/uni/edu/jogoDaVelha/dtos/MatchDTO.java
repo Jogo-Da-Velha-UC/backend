@@ -1,7 +1,5 @@
 package com.br.uni.edu.jogoDaVelha.dtos;
 
-import com.br.uni.edu.jogoDaVelha.model.StatusMatch;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,7 @@ public class MatchDTO implements Serializable {
     private PlayerDto playerTwo;
     private List<MoveDTO> moveList = new ArrayList<>();
     private GameStructDto gameStruct;
-    private StatusMatch statusMatch;
-    private PlayerDto winner;
+    private StatusMatchDto statusMatch;
 
     public MatchDTO() {
     }
@@ -59,20 +56,11 @@ public class MatchDTO implements Serializable {
         this.gameStruct = gameStruct;
     }
 
-    public StatusMatch getStatusMatch() {
+    public StatusMatchDto getStatusMatch() {
         return statusMatch;
     }
 
-    public void setStatusMatch(StatusMatch statusMatch) {
+    public void setStatusMatch(StatusMatchDto statusMatch) {
         this.statusMatch = statusMatch;
     }
-
-    public PlayerDto getWinner() {
-        return winner;
-    }
-
-    public void setWinner(PlayerDto winner) {
-        this.winner = winner;
-    }
-
 }
